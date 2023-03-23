@@ -1,15 +1,15 @@
-CNT Research Repository Template
+R01 <&> R61 Data Pipeline
 ================
 ![version](https://img.shields.io/badge/version-0.2.1-blue)
 ![pip](https://img.shields.io/pypi/v/pip.svg)
 ![https://img.shields.io/pypi/pyversions/](https://img.shields.io/pypi/pyversions/4)
 
-The purpose of this template is to consolidate shared libraries and enable consistent workflows and tests for most projects in the CNT lab. Users will be able to quickly load code from tested common libraries, or load their own personal code, in an object oriented manner.
+This repository is meant to provide a working environment for the R01 and R61 data pipelines. 
+
+This project manages sensitive patient data. **Do _NOT_ include any sensitive data in this repository.**
 
 # Prerequisites
 In order to use this repository, you must have access to either Python or Matlab. 
-
-We also highly recommend the use of a virtual environment, conda environment, or similar software to manage distributions. Examples for their use can be found in the documentation.
 
 # Installation
 
