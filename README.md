@@ -1,4 +1,4 @@
-R01 <&> R61 Data Pipeline
+R01 & R61 Data Pipeline
 ================
 ![version](https://img.shields.io/badge/version-0.2.1-blue)
 ![pip](https://img.shields.io/pypi/v/pip.svg)
