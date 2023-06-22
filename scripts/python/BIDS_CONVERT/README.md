@@ -1,18 +1,13 @@
-> %run DICOM_TO_BIDS.py --dataset RAW/ --datefile DICOM_DATES.csv --datalake HUP_BIDS_DATALAKE.pickle --bidsroot ./BIDSROOT/ --subject 0 --wrapper
+This code is meant to help with the creation of BIDS imaging data in Python. We've found HEUDICONV can be difficult to implement, so this is meant to be a more user-friendly option.
 
-I ran this from a python terminal. It requires nibabel and pybids to run.
+Example instantiation.
+> DICOM_TO_BIDS.py --dataset RAW/ --datefile DICOM_DATES.csv --datalake HUP_BIDS_DATALAKE.pickle --bidsroot ./BIDSROOT/ --subject 0
 
-It also import pydicom, but does not use it at present. So you can comment out that import if needed.
+would convert all the NIFTII data within the 'RAW' directory to BIDS format. The output directory is './BIDSROOT', and it creates a file called 'DICOM_DATES.csv' to remember each session name for a given subject on a given date. In this case, 
+subject '0'.
 
-The dataset keyword points to the folder where your niftii files reside.
+For more help, type:
 
-The datefile is a generated file. It store the session names used for a particular subject on a given date. 
+> DICOM_TO_BIDS.py --help
 
-The datalake is just the dictionary file we use to store protocol names. I've included the original csv and the pickle file for you. You may need to make some changes and add new keywords for your institution. I will be updating this code soon 
-to make updating it easier to manage. But for now you can unpickle it and add keywords in python, or use the convert_legacy_datalake.py by adding entries to the csv file it reads in. 
-
-The bidsroot flag is where you want the bids data to go.
-
-Subject is the subject id
-
-Wrapper is a necessary flag at present, but doesn't do anything important. It is a vestigial piece of code from development.
+You will need nibable and pybids to run this package.
