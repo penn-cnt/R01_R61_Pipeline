@@ -3,4 +3,4 @@
 /core_libraries/build/**
 **.DS_Store**
 
-!/user_data/README.txt
+!/user_data/README.md
