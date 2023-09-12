@@ -9,21 +9,20 @@ from datetime import datetime as DT
 
 def check_for_names(data):
     
-    # Clean the data of entries with symbols or numbers
-    data_list = data.split()
+    # Read in the name list
+    names = []
+    fp    = open(argv[2],'r')
+    tmp   = fp.readline()[:-1]
+    while tmp:
+        names.append(tmp.lower())
+        tmp = fp.readline()
+    fp.close()
     
-    # Make the regex search pattern
-    prog  = re.compile("[^A-Za-z_-]")
-    prog2 = re.compile("^[-.*]|^[_.*]|[.&-]$|[.&_]$") 
-    
-    # Make a blacklist of common words to avoid
-    blacklist = ['eeg','uv','xlevent','edf','annotations','analyzer']
-    
-    # Loop over words to get alphabetical characters only
-    data_text = ""
-    for ival in data_list:
-        if prog.search(ival) == None and prog2.search(ival) == None and ival not in blacklist:
-            data_text += ival+" "
+    # Make a list of possible words
+    words = data.split()
+    for iword in words:
+        if iword.lower() in names:
+            raise Exception("PHI Leak found. Code exited with a failure.")        
     
 
 def check_for_dates(data,raiseExcept=True):
@@ -63,31 +62,6 @@ def check_for_dates(data,raiseExcept=True):
                     print("If data is secure, you can skip this exception by passing raiseExcept=False")
                     raise Exception("PHI Leak found. Code exited with a failure.")
 
-
-def create_date_targets(ntarget=1000):
-    
-    """
-    targets   = []
-    frmt      = '%d-%m-%Y'
-    frmt_full = '%d-%B-%Y'
-    frmt_abbr = '%d-%b-%Y'
-    for idx in range(ntarget):
-        td         = 22*365*random.random()*datetime.timedelta(days=1)
-        timestamp  = (datetime.date(2000,1,1)+td)
-        fullmonth  = calendar.month_name[timestamp.month]
-        abbrmonth  = calendar.month_abbr[timestamp.month]
-        idate      = timestamp.strftime(frmt)
-        idate_full = timestamp.strftime(frmt_full)
-        idate_abbr = timestamp.strftime(frmt_abbr)
-        targets.append(idate)
-        targets.append(idate_full)
-        targets.append(idate_abbr)
-    return targets
-   """
-   pass
-
-def rules_based_flags():
-    pass
 
 def clean_data(fn):
     """
@@ -139,4 +113,6 @@ if __name__=='__main__':
 
     fn   = argv[1] 
     data = clean_data(fn)
+    check_for_dates(data)
+    check_for_names(data)
 

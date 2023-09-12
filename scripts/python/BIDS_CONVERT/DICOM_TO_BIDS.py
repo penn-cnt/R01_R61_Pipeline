@@ -22,12 +22,7 @@ def make_dataset_description(dataset_description_path):
     'Name': 'Your Dataset Name',
     'BIDSVersion': '1.6.0',
     'Description': 'Description of your dataset',
-    'License': 'License information',
-    'Authors': ['Author 1', 'Author 2'],
-    'Acknowledgements': 'Acknowledgements',
-    'Funding': ['Funding Source 1', 'Funding Source 2'],
-    'ReferencesAndLinks': ['Reference 1', 'Reference 2'],
-    'DatasetDOI': 'DOI of your dataset'
+    'License': 'License information'
     }
 
     # Save the dataset description as JSON
@@ -66,11 +61,11 @@ def main(args,run_dict,searchpath):
     # Make sure all command line options filled
     argsdict = vars(args)
     for ikey in argsdict.keys():
-        if not argsdict[ikey] and ikey!= 'wrapper':
+        if not argsdict[ikey]:
             print("Please specify --%s. Quitting." %(ikey))
             exit()
     
-    # Get the associated files
+    # Get the associated files and paths
     localroot   = str(args.dataset).split('/')[-1].strip(".json")+"*"
     ifile_paths = [str(ifile) for ifile in Pathlib(searchpath).rglob(localroot)]
     ifile_exts  = ['.'.join(ifile.split('/')[-1].split('.')[1:]) for ifile in ifile_paths]
@@ -228,7 +223,6 @@ def main(args,run_dict,searchpath):
     entities['acquisition'] = acq
     entities['ceagent']     = ce
 
-
     # Define the patterns for pathing    
     patterns = ['sub-{subject}[/ses-{session}]/{datatype}/sub-{subject}[_ses-{session}][_acq-{acquisition}][_ce-{ceagent}][_run-{run}][_{modality}].{extension<nii|nii.gz|json|bval|bvec|json>|nii.gz}']
 
@@ -271,17 +265,14 @@ if __name__ == '__main__':
     parser.add_argument('--datalake', help='Output path to the bids datalake for image naming.',default="./HUP_BIDS_DATALAKE.pickle")
     parser.add_argument('--datefile', help='Output path of session names mapped to acquisition dates for a given patient.',default='DATE_TO_SESSION.csv')
     parser.add_argument('--subject', help='Subject ID.')
-    parser.add_argument('--wrapper', default=True, action='store_false', help="Disable multiple files at a time. (Depreciated. Do not change.)")
     args = parser.parse_args()
     
     # Add a dataset description
     dataset_description_path = os.path.join(args.bidsroot, 'dataset_description.json')
     make_dataset_description(dataset_description_path)
-    
-    if not args.wrapper:
-        main(args,{})
-    else:
-        wrapper(args)
+
+    # Loop over json data and work file by file
+    wrapper(args)
         
         
         
