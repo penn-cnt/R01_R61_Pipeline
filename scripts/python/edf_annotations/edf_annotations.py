@@ -3,7 +3,7 @@
 """
 Purpose: Display EDF Annotation information for a given file and data record
 Author: John Frommeyer, Joshua Asuncion
-Last Updated: 2023-10-04
+Last Updated: 2023-10-12
 
 To run this program, run `python edf_annotations.py filename.edf` in the terminal
 
@@ -21,7 +21,7 @@ import numpy as np
 
 def process_file(edf_file, requested_record=None):
     # annotations_csv = pd.DataFrame(data={"Onset":[],"Duration":[],"Annotation":[]})  ## EDF spec: https://www.edfplus.info/specs/edfplus.html#edfplusannotations
-    annotations_csv = pd.DataFrame(data={"x":[],"y":[],"Annotation":[]})  ## EDF spec: https://www.edfplus.info/specs/edfplus.html#edfplusannotations
+    annotations_csv = pd.DataFrame(data={"Index":[],"Onset":[],"Annotation":[]})  ## EDF spec: https://www.edfplus.info/specs/edfplus.html#edfplusannotations
 
     """Actually read the file"""
     header = process_header(edf_file)
@@ -48,15 +48,17 @@ def process_file(edf_file, requested_record=None):
         while annotations[-2:] == "\x00\x00":  ## arr[-2:] returns a new array with the last two elements of the original array
             annotations = annotations[:-1]
             
-
-        annotation = annotations.decode('utf-8') # 'utf-8', 'latin-1', 'ascii', 'windows-1253'
+        encoding = 'utf-8'  ## 'utf-8', 'latin-1', 'ascii', 'windows-1253'
+        annotation = annotations.decode(encoding) 
         if re.search('[a-zA-Z]', annotation):
-            annotation = annotation.encode('utf-8') # 'utf-8', 'latin-1', 'ascii', 'windows-1253'
+            annotation = annotation.encode(encoding)
             annotation = annotation.split(b'\x14')
             annotation = [x for item in annotation for x in item.split(b'\x00')]
-            annotation = [item.decode('utf-8') for item in annotation if re.search('[A-Za-z0-9]', item.decode('utf-8'))] # 'utf-8', 'latin-1', 'ascii', 'windows-1253'
+            annotation = [x for item in annotation for x in item.split(b'\x150')]
+            annotation = [item.decode(encoding) for item in annotation if re.search('[A-Za-z0-9]', item.decode(encoding))]
             if len(annotation) != 3:
                 print(annotation)
+                #continue
                 print("WARNING: Check annotation. Terminating program.")
                 sys.exit()
             
